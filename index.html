@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Milan Pacini — Votre mariage en images</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --cream: #FAF8F4;
+    --ink: #1A1A18;
+    --ink-light: #3D3D39;
+    --stone: #8C8B85;
+    --border: #DDD9D0;
+    --accent: #BFA882;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .site-header {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    border-bottom: 0.5px solid var(--border);
+    position: relative;
+  }
+  .site-header::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 48px;
+    background: var(--accent);
+    margin: 0 auto 2rem;
+  }
+  .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .brand-sub {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--stone);
+    font-weight: 400;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--stone);
+    white-space: nowrap;
+    font-weight: 400;
+  }
+  .progress-track {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    position: relative;
+  }
+  .progress-fill {
+    position: absolute;
+    left: 0; top: 0; height: 100%;
+    background: var(--accent);
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-pct {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--stone);
+    font-weight: 400;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  /* MAIN LAYOUT */
+  .main { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+  /* INTRO */
+  .intro-block {
+    padding: 4rem 0 3rem;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 3.5rem;
+  }
+  .intro-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+  }
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.25;
+    margin-bottom: 1.75rem;
+    color: var(--ink);
+  }
+  .intro-title em { font-style: italic; color: var(--stone); }
+  .intro-body {
+    font-size: 0.95rem;
+    color: var(--ink-light);
+    line-height: 1.85;
+    max-width: 560px;
+  }
+  .intro-body p + p { margin-top: 1rem; }
+  .note-box {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 2px solid var(--accent);
+    background: rgba(191,168,130,0.06);
+  }
+  .note-box p {
+    font-size: 0.88rem;
+    color: var(--stone);
+    line-height: 1.75;
+    font-style: italic;
+  }
+
+  /* SECTION */
+  .form-section {
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .form-section.visible { opacity: 1; transform: translateY(0); }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .section-note {
+    font-size: 0.82rem;
+    color: var(--stone);
+    margin-bottom: 2rem;
+    font-style: italic;
+    line-height: 1.65;
+  }
+
+  /* FIELDS */
+  .field { margin-bottom: 2rem; }
+  .field label {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    font-weight: 400;
+    margin-bottom: 0.6rem;
+  }
+  .field .optional {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--stone);
+    margin-left: 0.5rem;
+    text-transform: none;
+    font-style: italic;
+    font-weight: 300;
+  }
+  .field input, .field textarea, .field select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0.65rem 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    border-radius: 0;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: var(--border); }
+  .field input:focus, .field textarea:focus, .field select:focus { border-bottom-color: var(--accent); }
+  .field textarea { resize: none; line-height: 1.7; min-height: 80px; }
+  .field select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238C8B85' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 4px center; }
+  .field select option { font-family: 'Jost', sans-serif; }
+
+  /* RADIO GROUPS */
+  .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+  .radio-group input[type="radio"] { display: none; }
+  .radio-group label {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border: 0.5px solid var(--border);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: none;
+    font-weight: 400;
+    font-family: 'Jost', sans-serif;
+    margin-bottom: 0;
+  }
+  .radio-group input[type="radio"]:checked + label {
+    border-color: var(--accent);
+    color: var(--ink);
+    background: rgba(191,168,130,0.1);
+  }
+  .radio-group label:hover { border-color: var(--ink-light); color: var(--ink); }
+
+  /* CHECKBOX GROUP */
+  .check-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+  .check-group input[type="checkbox"] { display: none; }
+  .check-group label {
+    display: inline-block;
+    padding: 0.45rem 1rem;
+    border: 0.5px solid var(--border);
+    font-size: 0.82rem;
+    color: var(--stone);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 400;
+    font-family: 'Jost', sans-serif;
+    text-transform: none;
+    margin-bottom: 0;
+  }
+  .check-group input[type="checkbox"]:checked + label {
+    border-color: var(--accent);
+    color: var(--ink);
+    background: rgba(191,168,130,0.1);
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+  .divider span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--stone);
+    white-space: nowrap;
+  }
+
+  /* RDV SECTION */
+  .rdv-section {
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .rdv-section.visible { opacity: 1; transform: translateY(0); }
+  .rdv-header {
+    text-align: center;
+    padding: 3rem 0 2.5rem;
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 2.5rem;
+  }
+  .rdv-header::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: var(--accent);
+    margin: 0 auto 2rem;
+  }
+  .rdv-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .rdv-header p {
+    font-size: 0.9rem;
+    color: var(--stone);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
+  .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+  @media (max-width: 520px) { .fields-grid { grid-template-columns: 1fr; } }
+
+  /* SUBMIT */
+  .submit-wrap { text-align: center; padding-top: 1rem; }
+  .btn-submit {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 2rem;
+  }
+  .btn-submit:hover { background: var(--ink-light); transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+  .submit-note {
+    font-size: 0.78rem;
+    color: var(--stone);
+    margin-top: 1.25rem;
+    font-style: italic;
+    line-height: 1.65;
+  }
+
+  /* SUCCESS STATE */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+  .success-screen::before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 56px;
+    background: var(--accent);
+    margin: 0 auto 2.5rem;
+  }
+  .success-screen h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  .success-screen p {
+    font-size: 0.95rem;
+    color: var(--stone);
+    max-width: 420px;
+    margin: 0 auto 1rem;
+    line-height: 1.85;
+  }
+  .success-screen .accent-line {
+    width: 48px;
+    height: 1px;
+    background: var(--accent);
+    margin: 2rem auto;
+  }
+
+  /* FOOTER */
+  .site-footer {
+    border-top: 0.5px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stone);
+    font-weight: 400;
+  }
+  .site-footer a { color: var(--stone); text-decoration: none; }
+  .site-footer a:hover { color: var(--ink); }
+
+  /* FIELD ERROR */
+  .field-error { font-size: 0.75rem; color: #B85C5C; margin-top: 4px; display: none; }
+  .field.has-error input, .field.has-error textarea, .field.has-error select { border-bottom-color: #B85C5C; }
+  .field.has-error .field-error { display: block; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">Milan Pacini</div>
+  <div class="brand-sub">Editorial Photography &nbsp;—&nbsp; Mariage &amp; Éditorial</div>
+</header>
+
+<div class="progress-wrap" id="progress-wrap" style="display:none">
+  <span class="progress-label">Votre formulaire</span>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="progress-pct" id="progress-pct">0 %</span>
+</div>
+
+<div class="main" id="form-wrap">
+
+  <div class="intro-block form-section">
+    <div class="intro-label">Un premier pas vers votre histoire</div>
+    <h1 class="intro-title">Parlez-moi de<br/><em>votre mariage</em></h1>
+    <div class="intro-body">
+      <p>Avant notre appel téléphonique, je vous invite à remplir ce petit formulaire. Il me permettra de mieux comprendre votre projet, votre sensibilité et vos envies — pour que notre échange soit dès le départ centré sur ce qui compte vraiment pour vous.</p>
+      <p>Il n'y a pas de bonnes ou de mauvaises réponses. Répondez en toute liberté, avec les mots qui vous viennent. Si vous n'avez pas encore toutes les informations, c'est tout à fait normal — chaque mariage se construit progressivement.</p>
+    </div>
+    <div class="note-box">
+      <p>Ce formulaire vous prend environ 5 minutes. Aucun champ n'est bloquant — si vous n'avez pas encore la réponse, laissez le champ vide ou cochez "Je ne sais pas encore". On en parlera ensemble lors de l'appel.</p>
+    </div>
+  </div>
+
+  <form id="wedding-form" novalidate>
+
+    <!-- SECTION 1 -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-num">01</span>
+        <span class="section-title">Votre grand jour</span>
+      </div>
+      <p class="section-note">Les informations de base sur votre mariage. Si la date ou le lieu ne sont pas encore fixés, pas de panique — indiquez simplement ce que vous savez.</p>
+
+      <div class="fields-grid">
+        <div class="field">
+          <label>Vos prénoms <span class="optional">tous les deux</span></label>
+          <input type="text" name="prenoms" placeholder="Sophie & Thomas" autocomplete="off"/>
+        </div>
+        <div class="field">
+          <label>Date du mariage <span class="optional">si fixée</span></label>
+          <input type="text" name="date" placeholder="ex. 14 juin 2026"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Lieu du mariage <span class="optional">ville, domaine, château…</span></label>
+        <input type="text" name="lieu" placeholder="ex. Château de Vaux, Aix-en-Provence"/>
+      </div>
+
+      <div class="field">
+        <label>Nombre d'invités estimé</label>
+        <div class="radio-group">
+          <input type="radio" name="invites" id="inv1" value="Moins de 50"/>
+          <label for="inv1">Moins de 50</label>
+          <input type="radio" name="invites" id="inv2" value="50 à 100"/>
+          <label for="inv2">50 à 100</label>
+          <input type="radio" name="invites" id="inv3" value="100 à 150"/>
+          <label for="inv3">100 à 150</label>
+          <input type="radio" name="invites" id="inv4" value="Plus de 150"/>
+          <label for="inv4">Plus de 150</label>
+          <input type="radio" name="invites" id="inv5" value="Je ne sais pas encore"/>
+          <label for="inv5">Je ne sais pas encore</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Type de cérémonie</label>
+        <div class="check-group">
+          <input type="checkbox" name="ceremonie" id="cer1" value="Civile"/>
+          <label for="cer1">Civile</label>
+          <input type="checkbox" name="ceremonie" id="cer2" value="Religieuse"/>
+          <label for="cer2">Religieuse</label>
+          <input type="checkbox" name="ceremonie" id="cer3" value="Laïque"/>
+          <label for="cer3">Laïque</label>
+          <input type="checkbox" name="ceremonie" id="cer4" value="Pas encore décidé"/>
+          <label for="cer4">Pas encore décidé</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-num">02</span>
+        <span class="section-title">Vos envies en photos</span>
+      </div>
+      <p class="section-note">C'est la partie la plus importante. Ici, pas de bonne réponse — il s'agit juste de me donner une idée de ce qui vous touche, de ce qui vous ressemble.</p>
+
+      <div class="field">
+        <label>Quel style de photos vous attire le plus ?</label>
+        <div class="check-group">
+          <input type="checkbox" name="style" id="st1" value="Reportage & instants volés"/>
+          <label for="st1">Reportage &amp; instants volés</label>
+          <input type="checkbox" name="style" id="st2" value="Éditorial & mis en scène"/>
+          <label for="st2">Éditorial &amp; mis en scène</label>
+          <input type="checkbox" name="style" id="st3" value="Intime & poétique"/>
+          <label for="st3">Intime &amp; poétique</label>
+          <input type="checkbox" name="style" id="st4" value="Festif & vivant"/>
+          <label for="st4">Festif &amp; vivant</label>
+          <input type="checkbox" name="style" id="st5" value="Noir & blanc"/>
+          <label for="st5">Noir &amp; blanc</label>
+          <input type="checkbox" name="style" id="st6" value="Je ne sais pas encore"/>
+          <label for="st6">Je ne sais pas encore</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Avez-vous des références ou des comptes Instagram qui vous inspirent ? <span class="optional">facultatif</span></label>
+        <textarea name="inspirations" placeholder="Des noms de photographes, des mots-clés, des liens… Tout est bienvenu."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Comment vous sentez-vous devant un objectif ?</label>
+        <div class="radio-group">
+          <input type="radio" name="objectif" id="ob1" value="À l'aise, on aime être photographiés"/>
+          <label for="ob1">À l'aise, on aime ça</label>
+          <input type="radio" name="objectif" id="ob2" value="Un peu timides mais motivés"/>
+          <label for="ob2">Un peu timides mais motivés</label>
+          <input type="radio" name="objectif" id="ob3" value="Plutôt mal à l'aise, on préfère le naturel"/>
+          <label for="ob3">On préfère le naturel</label>
+          <input type="radio" name="objectif" id="ob4" value="Variable selon les moments"/>
+          <label for="ob4">Variable selon les moments</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Y a-t-il des moments absolument essentiels à capturer ? <span class="optional">facultatif</span></label>
+        <textarea name="moments_cles" placeholder="L'entrée de la mariée, les larmes de votre père, un rituel particulier… Tout ce qui compte pour vous."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-num">03</span>
+        <span class="section-title">Le déroulé de votre journée</span>
+      </div>
+      <p class="section-note">Ne vous inquiétez pas si tout n'est pas encore calé — on construira le planning ensemble lors de notre appel.</p>
+
+      <div class="field">
+        <label>À partir de quand souhaitez-vous que je commence ?</label>
+        <div class="radio-group">
+          <input type="radio" name="debut" id="deb1" value="Dès les préparatifs"/>
+          <label for="deb1">Dès les préparatifs</label>
+          <input type="radio" name="debut" id="deb2" value="À la cérémonie"/>
+          <label for="deb2">À la cérémonie</label>
+          <input type="radio" name="debut" id="deb3" value="Au cocktail"/>
+          <label for="deb3">Au cocktail</label>
+          <input type="radio" name="debut" id="deb4" value="Pas encore décidé"/>
+          <label for="deb4">Pas encore décidé</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Jusqu'à quand souhaitez-vous ma présence ?</label>
+        <div class="radio-group">
+          <input type="radio" name="fin" id="fin1" value="Fin du cocktail / vin d'honneur"/>
+          <label for="fin1">Fin du cocktail</label>
+          <input type="radio" name="fin" id="fin2" value="Jusqu'à la pièce montée"/>
+          <label for="fin2">Pièce montée</label>
+          <input type="radio" name="fin" id="fin3" value="Jusqu'à l'ouverture du bal"/>
+          <label for="fin3">Ouverture du bal</label>
+          <input type="radio" name="fin" id="fin4" value="Toute la soirée"/>
+          <label for="fin4">Toute la soirée</label>
+          <input type="radio" name="fin" id="fin5" value="Pas encore décidé"/>
+          <label for="fin5">Pas encore décidé</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Souhaitez-vous une séance couple le jour J ? <span class="optional">first look, balade…</span></label>
+        <div class="radio-group">
+          <input type="radio" name="seance_couple" id="sc1" value="Oui, c'est important pour nous"/>
+          <label for="sc1">Oui, c'est important</label>
+          <input type="radio" name="seance_couple" id="sc2" value="Oui, si le timing le permet"/>
+          <label for="sc2">Si le timing le permet</label>
+          <input type="radio" name="seance_couple" id="sc3" value="On hésite encore"/>
+          <label for="sc3">On hésite encore</label>
+          <input type="radio" name="seance_couple" id="sc4" value="Non, on préfère les moments spontanés"/>
+          <label for="sc4">Non, plutôt spontané</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Y a-t-il un ou plusieurs vidéastes prévus ce jour-là ? <span class="optional">facultatif</span></label>
+        <div class="radio-group">
+          <input type="radio" name="videaste" id="vid1" value="Oui"/>
+          <label for="vid1">Oui</label>
+          <input type="radio" name="videaste" id="vid2" value="Non"/>
+          <label for="vid2">Non</label>
+          <input type="radio" name="videaste" id="vid3" value="Pas encore décidé"/>
+          <label for="vid3">Pas encore décidé</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Y a-t-il des personnes particulièrement importantes à ne pas manquer ? <span class="optional">facultatif</span></label>
+        <textarea name="personnes" placeholder="Parents, grands-parents, amis proches… ou simplement 'beaucoup de monde vient de loin'."></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="form-section">
+      <div class="section-header">
+        <span class="section-num">04</span>
+        <span class="section-title">Un mot sur vous</span>
+      </div>
+      <p class="section-note">Cette partie est entièrement libre. Elle m'aide à comprendre l'atmosphère et l'énergie de votre couple, bien au-delà du mariage.</p>
+
+      <div class="field">
+        <label>Comment décririez-vous votre histoire à deux ? <span class="optional">quelques mots suffisent</span></label>
+        <textarea name="histoire" placeholder="Une rencontre, un lieu, une ambiance… Comment vous raconteriez-vous ?" style="min-height:90px"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Avez-vous une enveloppe budgétaire en tête ? <span class="optional">facultatif & confidentiel</span></label>
+        <div class="radio-group">
+          <input type="radio" name="budget" id="bud1" value="Moins de 2 000 €"/>
+          <label for="bud1">Moins de 2 000 €</label>
+          <input type="radio" name="budget" id="bud2" value="2 000 – 3 000 €"/>
+          <label for="bud2">2 000 – 3 000 €</label>
+          <input type="radio" name="budget" id="bud3" value="3 000 – 4 500 €"/>
+          <label for="bud3">3 000 – 4 500 €</label>
+          <input type="radio" name="budget" id="bud4" value="Plus de 4 500 €"/>
+          <label for="bud4">Plus de 4 500 €</label>
+          <input type="radio" name="budget" id="bud5" value="Je préfère en discuter à l'oral"/>
+          <label for="bud5">À discuter à l'oral</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Autre chose à me partager ? <span class="optional">facultatif</span></label>
+        <textarea name="autre" placeholder="Contraintes particulières, questions, doutes, envies folles… Tout est bienvenu."></textarea>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider"><span>Et maintenant, prenons rendez-vous</span></div>
+
+    <!-- RDV SECTION -->
+    <div class="rdv-section form-section">
+      <div class="rdv-header">
+        <h2>Un appel pour se rencontrer</h2>
+        <p>Une fois ce formulaire envoyé, je vous contacte dans les 48h pour fixer notre appel téléphonique — un moment doux et sans pression pour apprendre à se connaître.</p>
+      </div>
+
+      <div class="fields-grid">
+        <div class="field" id="field-prenom">
+          <label>Votre prénom <span style="color:#B85C5C;font-size:0.8rem;">*</span></label>
+          <input type="text" name="contact_prenom" id="contact_prenom" placeholder="Sophie" autocomplete="given-name"/>
+          <div class="field-error" id="err-prenom">Ce champ est requis</div>
+        </div>
+        <div class="field" id="field-nom">
+          <label>Votre nom <span class="optional">facultatif</span></label>
+          <input type="text" name="contact_nom" placeholder="Lefebvre" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="fields-grid">
+        <div class="field" id="field-email">
+          <label>Votre e-mail <span style="color:#B85C5C;font-size:0.8rem;">*</span></label>
+          <input type="email" name="contact_email" id="contact_email" placeholder="sophie@exemple.fr" autocomplete="email"/>
+          <div class="field-error" id="err-email">Adresse e-mail invalide</div>
+        </div>
+        <div class="field">
+          <label>Votre téléphone <span class="optional">facultatif</span></label>
+          <input type="tel" name="contact_tel" placeholder="+33 6 12 34 56 78" autocomplete="tel"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Quand êtes-vous disponibles pour un appel ? <span class="optional">approximatif, c'est parfait</span></label>
+        <div class="check-group">
+          <input type="checkbox" name="dispo" id="dis1" value="Matin (9h–12h)"/>
+          <label for="dis1">Matin 9h–12h</label>
+          <input type="checkbox" name="dispo" id="dis2" value="Début d'après-midi (12h–15h)"/>
+          <label for="dis2">12h–15h</label>
+          <input type="checkbox" name="dispo" id="dis3" value="Après-midi (15h–18h)"/>
+          <label for="dis3">15h–18h</label>
+          <input type="checkbox" name="dispo" id="dis4" value="Soir (après 18h)"/>
+          <label for="dis4">Soir après 18h</label>
+          <input type="checkbox" name="dispo" id="dis5" value="Week-end"/>
+          <label for="dis5">Week-end</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Y a-t-il des jours à éviter ? <span class="optional">facultatif</span></label>
+        <input type="text" name="jours_eviter" placeholder="ex. pas le lundi, semaine du 12…"/>
+      </div>
+
+      <div class="submit-wrap">
+        <button type="submit" class="btn-submit">Envoyer &amp; prendre rendez-vous</button>
+        <p class="submit-note">
+          Vos informations restent strictement confidentielles.<br/>
+          Je vous réponds dans les 48h pour confirmer notre rendez-vous téléphonique.
+        </p>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="success-screen">
+    <h2>Merci infiniment,<br/>votre formulaire est envoyé.</h2>
+    <div class="accent-line"></div>
+    <p>Je prends le temps de lire attentivement ce que vous m'avez partagé. Vous recevrez de mes nouvelles dans les 48h pour fixer ensemble notre appel téléphonique.</p>
+    <p>D'ici là, n'hésitez pas à explorer mon travail sur Instagram — <strong>@milan.pacini</strong></p>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <p>Milan Pacini &nbsp;—&nbsp; <a href="mailto:pacini.raw@gmail.com">pacini.raw@gmail.com</a> &nbsp;—&nbsp; <a href="tel:+33631497952">+33 06 31 49 79 52</a> &nbsp;—&nbsp; <a href="#">@milan.pacini</a></p>
+</footer>
+
+<script>
+  // Progress tracking
+  const progressWrap = document.getElementById('progress-wrap');
+  const progressFill = document.getElementById('progress-fill');
+  const progressPct = document.getElementById('progress-pct');
+  const allInputs = document.querySelectorAll('input:not([type="submit"]), textarea, select');
+  const radioCheckNames = new Set();
+
+  function updateProgress() {
+    let answered = 0;
+    const counted = new Set();
+    allInputs.forEach(inp => {
+      if (inp.type === 'radio' || inp.type === 'checkbox') {
+        if (!counted.has(inp.name)) {
+          counted.add(inp.name);
+          const anyChecked = document.querySelector(`input[name="${inp.name}"]:checked`);
+          if (anyChecked) answered++;
+        }
+      } else {
+        if (inp.value.trim()) answered++;
+      }
+    });
+    const totalGroups = new Set([...allInputs].filter(i => i.type==='radio'||i.type==='checkbox').map(i=>i.name)).size;
+    const totalText = [...allInputs].filter(i=>i.type!=='radio'&&i.type!=='checkbox').length;
+    const total = totalGroups + totalText;
+    const pct = total > 0 ? Math.round(answered / total * 100) : 0;
+    progressFill.style.width = pct + '%';
+    progressPct.textContent = pct + ' %';
+  }
+
+  allInputs.forEach(inp => inp.addEventListener('input', updateProgress));
+  allInputs.forEach(inp => inp.addEventListener('change', updateProgress));
+
+  // Show progress bar after scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 200) progressWrap.style.display = 'flex';
+  });
+
+  // Intersection observer for section reveals
+  const sections = document.querySelectorAll('.form-section, .rdv-section');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  sections.forEach(s => observer.observe(s));
+
+  // Form submit
+  document.getElementById('wedding-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const prenom = document.getElementById('contact_prenom');
+    const email = document.getElementById('contact_email');
+    const fieldPrenom = document.getElementById('field-prenom');
+    const fieldEmail = document.getElementById('field-email');
+
+    fieldPrenom.classList.remove('has-error');
+    fieldEmail.classList.remove('has-error');
+
+    if (!prenom.value.trim()) { fieldPrenom.classList.add('has-error'); valid = false; }
+    const emailVal = email.value.trim();
+    if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { fieldEmail.classList.add('has-error'); valid = false; }
+
+    if (!valid) {
+      const firstError = document.querySelector('.has-error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    document.getElementById('form-wrap').querySelector('form').style.display = 'none';
+    document.querySelector('.intro-block').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>
