@@ -798,15 +798,36 @@
     if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { fieldEmail.classList.add('has-error'); valid = false; }
 
     if (!valid) {
-      const firstError = document.querySelector('.has-error');
-      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
+      const firstError = document.querySelector('.has-error');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
 
-    document.getElementById('form-wrap').querySelector('form').style.display = 'none';
-    document.querySelector('.intro-block').style.display = 'none';
-    document.getElementById('success-screen').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // --- NOUVEAU CODE POUR FORMSPREE ---
+    const form = e.target;
+    const data = new FormData(form);
+
+    // On envoie les données à Formspree en arrière-plan
+    fetch(form.action, {
+      method: form.method,
+      body: data,
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        // Si Formspree dit OK, on affiche ton écran de succès
+        document.getElementById('form-wrap').querySelector('form').style.display = 'none';
+        document.querySelector('.intro-block').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        form.reset(); // On vide les champs du formulaire
+      } else {
+        alert("Oups ! Il y a eu un petit problème lors de l'envoi. Veuillez réessayer.");
+      }
+    }).catch(error => {
+      alert("Oups ! Une erreur de connexion empêche l'envoi.");
+    });
   });
 </script>
 </body>
